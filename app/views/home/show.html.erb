@@ -1,0 +1,63 @@
+<div class="container bg-light">
+    <h5 class="text-right text-success">
+        --- Powered by 
+        <img class="img-thumbnail" src="https://beactive.it/img_news/GoogleFlight.jpg" alt="googleIMG" width="87"> 
+        <img class="img-thumbnail" src="http://www.sunmarketing.cz/system/images/BAhbBlsHOgZmIjMyMDExLzA2LzEzLzEyXzE0XzAwXzY2Nl9SdWJ5X29uX1JhaWxzX2xvZ28ucG5n/Ruby_on_Rails_logo.png" alt="rails" width="50">
+        <img class="img-thumbnail" src="http://d11p8zzranqxa6.cloudfront.net/images/programs/programs/stacks/new_stacks_logo/ruby-on-rails.png" alt="ruby" width="61.3"> 
+    </h5>
+    <h6 class="text-secondary">Sign Up Today to get your real time notification of your desired flights with the desired price!</h6>    
+    <hr>
+    <div class="row">
+        <div class="col">
+            <form action="/users" method="post">
+                <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+                <h3>Sign up</h3>
+                <div class="form-group">
+                    <label for="Name">Name:</label>
+                    <input class="form-control" type="text" id="Name" name="user[name]">
+                </div>
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <input class="form-control" type="email" id="Email" name="user[email]">
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password: </label>
+                    <input class="form-control" type="password" name="user[password]" id="Password">
+                </div>
+                <div class="form-group">
+                    <label for="Password_Confirmaiton">Password Comfirmation: </label>
+                    <input class="form-control" type="password" name="user[password_confirmation]" id="Password_Confirmation">
+                </div>
+                <input type="hidden" name="user[image]" value="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDEoy1f_9xlrVllLWlJBRumfpZj2Th2MQzcxwcdlwBQKY5fbaw">
+                <input type="submit" class="btn btn-success" value="Join">
+            </form>
+        </div>
+        <hr>
+        <div class='col'>
+            <form action="/login" method="post">
+                <div class="form-group">
+                    <input class="form-control" name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+                    <h3>Log In</h3>
+                    <label for="Email">Email:</label>
+                    <input class="form-control" type="email" id="Email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="Password">Password:</label>
+                    <input class="form-control" type="password" name="password" id="Password">
+                </div>
+                <input type="submit" class="btn btn-success" value="Log In">
+            </form>
+            <p></p>
+            <%= link_to "Sign in with Google ", "/auth/google_oauth2", id: "sign_in", class: "btn btn-primary" %> <img class="img-thumbnail" src="http://1.bp.blogspot.com/-akWpWW2cnWY/UnUdKpxQG0I/AAAAAAAAYaQ/MKnyeC6oMd4/s1600/Google+Chrome+adds+automatic+malware+blocking+for+suspicious+downloads.png" alt="googleIMG" width="40">
+            <div class="container">
+                <% if flash[:errors] %>
+                    <% flash[:errors].each do |error| %>
+                        <div class="text-danger">
+                            ***<%= error %>***
+                        </div>
+                    <% end %>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>

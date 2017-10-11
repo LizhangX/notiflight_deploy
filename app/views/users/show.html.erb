@@ -1,0 +1,110 @@
+<div class="container bg-light">
+    <div class="row">
+        <div class="container col-md-8">
+        <h3 class="text-danger">RoundTrip</h3>
+            <form action="/flights" method="post">
+                <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+                <!-- <input type="hidden" name="airports" id="airports" value="<%= @airports %>"> -->
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="tags">Departure Airport: </label>
+                        <input class="form-control tags" id="tags" name="flight[departureAirport]">
+                    </div>
+                    <div class="form-group col">
+                        <label for="tags">Arriving Airport: </label>
+                        <input class="form-control tags" name="flight[arrivingAirport]">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="Ddate">Departure Date: </label>
+                        <input type="date" class="form-control" id="Ddate" name="flight[departureDate]">
+                        <%# <div class="form-row">
+                            <div class="form-group col-6">
+                                Range from: <input class="form-control" type="time" name="flight[departFromTime]" value="00:00:00"/>
+                            </div>
+                            <div class="form-group col-6">
+                                To:(optinoal) <input class="form-control" type="time" name="flight[departToTime]" value="23:59:00"/>
+                            </div>
+                        </div> %>
+                    </div>
+                    <div class="form-group col">
+                        <label for="Rdate">Return Date: </label>
+                        <input type="date" class="form-control" id="Rdate" name="flight[returnDate]">
+                        <%# <div class="form-row">
+                            <div class="form-group col-6">
+                                Range from: <input class="form-control" type="time" name="flight[returnFromTime]" value="00:00:00"/>
+                            </div>
+                            <div class="form-group col-6">
+                                To:(optional) <input class="form-control" type="time" name="flight[returnToTime]" value="23:59:00"/>
+                            </div>
+                        </div> %>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="Dprice">Desired Price: </label>
+                        <input type="text" class="form-control" id="Dprice" name="flight[lowerPrice]" value="$">
+                    </div>
+                    <div class="form-group col">
+                        <label for="Tprice">Upper Price Limit: </label>
+                        <input type="text" class="form-control" id="Tprice" name="flight[upperPrice]" value="$">
+                    </div>
+                    <%# <input type="range" name="time" id="" min="00:00:00" max="23:59:59"> %>
+                </div>
+                <input type="hidden" name="flight[tracking]" value="true">
+                <button type="submit" class="btn btn-primary">Schedule Your Price Notification</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+        <p></p>
+        <h6>Directions:</h6>
+            <p>* Choose Your Airports and Dates to track the best price from Google Flight.</p>
+            <p>* You will recieve daily email of the trend of your tracked flights.</p>
+            <p>* Best of all, you will recieve email notification if the price hit your set price point(lower & upper).</p>
+        </div>
+    </div>    
+    <div class="container text-danger">
+        <% if flash[:notice] %>
+            <% flash[:notice].each do |error| %>
+                <p>***<%= error %>***</p>
+            <% end %>
+        <% end %>
+    </div>
+    <hr>
+    <div class="container">
+        <h2 class="text-primary">List of your tracked flights</h2>
+        <hr>
+        <% @flights.each_with_index do |flight, idx| %>
+        <div>
+            <h3 class="text-primary">No.<%= idx + 1 %></h3>
+            <p>From <%= flight.departureAirport %> to <%= flight.arrivingAirport %> Depart: <%= flight.departureDate %> Return: <%= flight.returnDate %></p>
+            <%= line_chart Pricenumber.where(flight: flight).group_by_hour(:created_at, series: false).average(:price) %>
+            <form action="/flights/track" method="post">
+                <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+                <input type="hidden" name="id" value="<%= flight.id %>"></input>
+                <% if flight.tracking %>                    
+                    <button type="submit" class="btn btn-danger">Unsubscribe from this flight</button>
+                <% else %>
+                    <button type="submit" class="btn btn-primary">Subscribe this flight</button>                        
+                <% end %>
+                <a href="/flights/<%= flight.id %>" data-method="delete" class="btn btn-secondary">Delete this flight from my List</a>
+            </form>
+        </div>
+        <hr>
+        <% end %>
+    </div>
+</div>
+<script>    
+    $( function() {
+        $( ".tags" ).autocomplete({
+            delay:500,
+            source: function(req, res){
+                $.get('/search',{query: req.term}, function(data){
+                    res(data);
+                })
+            },
+            minLength: 1
+        });
+    } );
+</script>

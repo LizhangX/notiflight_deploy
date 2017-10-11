@@ -1,0 +1,9 @@
+<div>
+  <p>Dear <%= @user.name %></p>
+  <p>Here is your daily price trend!</p>
+  <% @user.flights.each do |flight| %>
+    <p>From <%= flight.departureAirport %> to <%= flight.arrivingAirport %> Depart: <%= flight.departureDate %> Return: <%= flight.returnDate %></p>
+    <%= line_chart Pricenumber.where(flight: flight).group_by_minute(:created_at, series: false).minimum(:price) %>  
+  <% end %>
+  <hr>
+</div>

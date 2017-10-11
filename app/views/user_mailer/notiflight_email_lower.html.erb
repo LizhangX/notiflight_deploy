@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1> Congratulations! Your price has dropped, <%= @flight.user.name %></h1>
+    <p>Your price change from <%= @lowerPrice %> to <%= @price %></p>
+    <p>
+        Goto this link: <%= @url %> to see the price.
+    </p>
+  </body>
+</html>
